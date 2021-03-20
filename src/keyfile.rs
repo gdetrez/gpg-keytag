@@ -2,7 +2,7 @@ use nom::{
     branch::alt,
     bytes::complete::{tag, take, take_while1},
     character::is_digit,
-    combinator::iterator,
+    combinator::{iterator, map_res},
     IResult,
 };
 use std::io;
@@ -68,8 +68,12 @@ fn pleaf(input: Input) -> IResult<Input, TokenTree> {
 }
 
 fn ptoken(input: Input) -> IResult<Input, Token> {
-    let (input, size) = take_while1(is_digit)(input)?;
-    let size: usize = std::str::from_utf8(size).unwrap().parse().unwrap();
+    let (input, size): (_, usize) = map_res(take_while1(is_digit), |bytes| unsafe {
+        // We've already checked that the bytes are valid digit characters, so it should be safe to
+        // use from_utf8_unchecked.  The parsing can still fail though, in case we overflow the
+        // size of usize.
+        std::str::from_utf8_unchecked(bytes).parse()
+    })(input)?;
     let (input, _) = tag(b":")(input)?;
     let (input, result) = take(size)(input)?;
     Ok((input, result))
