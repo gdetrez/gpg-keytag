@@ -11,6 +11,7 @@ type Input<'a> = &'a [u8];
 type Token<'a> = &'a [u8];
 
 #[derive(Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "arbitrary", derive(arbitrary::Arbitrary))]
 pub enum TokenTree<'a> {
     Node(Vec<TokenTree<'a>>),
     Leaf(Token<'a>),

@@ -10,3 +10,4 @@ edition = "2018"
 anyhow = "1.0.38"
 nom = "6.1.2"
 structopt = "0.3.21"
+arbitrary = { version = "1", optional = true, features = ["derive"] }
