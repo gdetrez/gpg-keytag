@@ -8,6 +8,6 @@ edition = "2018"
 
 [dependencies]
 anyhow = "1.0.43"
-nom = "6.2.1"
+nom = "7.0.0"
 structopt = "0.3.23"
 arbitrary = { version = "1", optional = true, features = ["derive"] }
