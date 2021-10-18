@@ -9,5 +9,5 @@ edition = "2018"
 [dependencies]
 anyhow = "1.0.43"
 nom = "7.0.0"
-structopt = "0.3.23"
+structopt = "0.3.25"
 arbitrary = { version = "1", optional = true, features = ["derive"] }
