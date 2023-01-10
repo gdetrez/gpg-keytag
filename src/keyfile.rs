@@ -41,7 +41,7 @@ pub fn serialize(tree: &TokenTree, writer: &mut impl io::Write) -> io::Result<()
         TokenTree::Node(children) => {
             writer.write_all(b"(")?;
             for child in children {
-                serialize(&child, writer)?;
+                serialize(child, writer)?;
             }
             writer.write_all(b")")?;
         }
