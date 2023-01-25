@@ -3,6 +3,7 @@ on:
   push:
     branches:
     - main  # Use your actual default branch here.
+    - clusterfuzzlite
 permissions: read-all
 jobs:
   Build:
