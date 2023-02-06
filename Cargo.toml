@@ -7,7 +7,7 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-anyhow = "1.0.68"
+anyhow = "1.0.69"
 nom = "7.1.1"
 structopt = "0.3.26"
 arbitrary = { version = "1", optional = true, features = ["derive"] }
