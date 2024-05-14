@@ -1,30 +1,35 @@
-use std::path::PathBuf;
-use structopt::StructOpt;
-
 mod keyfile;
 use keyfile::TokenTree;
 
 const GPG_COMMENT_FIELD: &[u8] = b"comment";
 
-#[derive(Debug, StructOpt)]
-struct Opt {
-    file: PathBuf,
-    comment: Option<String>,
-}
+const USAGE: &str = r#"gpg-keytags: add a comment to your GPG key.
+
+Usage:
+
+    gpg-keytag <keyfile> [<comment>]
+
+You must specify the path to a private key file (usually in .gnupg/private-keys-v1.d/). If only
+<keyfile> is given, gpg-keytag will print the current tag. If <comment> is given as well,
+gpg-keytag will replace the current tag with the new comment.
+"#;
 
 fn main() -> anyhow::Result<()> {
-    let opt = Opt::from_args();
-    let content = std::fs::read(&opt.file)?;
-    let mut tree = keyfile::deserialize(&content)?;
-    if let Some(comment) = opt.comment {
-        upsert_comment(&mut tree, &comment);
-        let mut writer = std::fs::File::create(&opt.file)?;
-        keyfile::serialize(&tree, &mut writer)?;
-    } else {
-        println!("{}", get_comment(&tree).as_deref().unwrap_or("(none)"));
-        // if let Some(comment) = get_comment(&tree) {
-        // println!("{}", comment);
-        // }
+    let args: Vec<String> = std::env::args().collect();
+    match args.as_slice() {
+        [_, keyfile] => {
+            let content = std::fs::read(keyfile)?;
+            let tree = keyfile::deserialize(&content)?;
+            println!("{}", get_comment(&tree).as_deref().unwrap_or("(none)"));
+        }
+        [_, keyfile, comment] => {
+            let content = std::fs::read(keyfile)?;
+            let mut tree = keyfile::deserialize(&content)?;
+            upsert_comment(&mut tree, &comment);
+            let mut writer = std::fs::File::create(keyfile)?;
+            keyfile::serialize(&tree, &mut writer)?;
+        }
+        _ => eprintln!("{}", USAGE),
     }
     Ok(())
 }
